@@ -1,0 +1,367 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Private Gallery - MekoVisuals</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+
+	<style>
+		/* Custom Gallery Grid */
+		.gallery {
+			margin-top:20px;
+			display:grid;
+			grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+			gap:12px;
+		}
+		.gallery-item {
+			position: relative;
+			border-radius:8px;
+			overflow: hidden;
+		}
+		.gallery-item img {
+			width:100%; height:130px; object-fit:cover;
+			border-radius:8px;
+			cursor: pointer;
+			transition: transform 0.2s ease;
+		}
+		.gallery-item:hover img {
+			transform: scale(1.05);
+		}
+		.download-btn {
+			position: absolute;
+			top: 8px;
+			right: 8px;
+			background: rgba(0,0,0,0.7);
+			color: white;
+			border: none;
+			border-radius: 50%;
+			width: 30px;
+			height: 30px;
+			font-size: 16px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-decoration: none;
+			opacity: 0.8;
+			line-height: 30px; /* Added for vertical centering */
+		}
+		.download-btn:hover { opacity: 1; }
+
+		/* Custom Error/Hint Text */
+		.error {color:#ff7b7b; margin-top:1.5em; display:none}
+		.hint { color: rgba(255, 255, 255, 0.5); margin-top:1.5em; font-size:0.9rem; }
+		
+		/* Custom Lightbox Styles */
+		#lightbox {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0; top: 0;
+			width: 100%; height: 100%;
+			background-color: rgba(0,0,0,0.9);
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+		#lightbox img { max-width: 90vw; max-height: 80vh; object-fit: contain; }
+		#lightbox-close, .lightbox-nav {
+			position: absolute;
+			cursor: pointer;
+			color: #fff;
+			font-size: 40px;
+			font-weight: bold;
+			user-select: none;
+		}
+		#lightbox-close { top: 20px; right: 35px; }
+		.lightbox-nav { top: 50%; transform: translateY(-50%); padding: 16px; }
+		#lightbox-prev { left: 10px; }
+		#lightbox-next { right: 10px; }
+	</style>
+</head>
+<body class="is-preload">
+
+	<div id="wrapper">
+
+			<header id="header">
+					<div class="content">
+						<div class="inner">
+							
+							<div id="lockBox">
+								<h1>Private Gallery</h1>
+								<p>This gallery is password-protected. Enter the password I sent you.</p>
+								
+								<form method="post" action="#" onsubmit="unlock(); return false;">
+									<div class="fields">
+										<div class="field">
+											<input id="pw" type="password" placeholder="Enter password" autocomplete="off" />
+										</div>
+									</div>
+									<ul class="actions">
+										<li><button id="unlockBtn" type="button" class="button primary">View Gallery</button></li>
+									</ul>
+								</form>
+								
+								<div class="error" id="err">Incorrect password</div>
+								<div class="hint">Press Enter or click "View Gallery"</div>
+							</div>
+
+							<div id="galleryBox" style="display:none;">
+								<div style="display:flex; justify-content:space-between; align-items:center;">
+									<h2 class="major">Gallery</h2>
+									<button id="downloadAllBtn" class="button primary" style="margin-top:0;">Download All (.zip)</button>
+								</div>
+								
+								<div class="gallery" id="gallery">
+									</div>
+
+								<hr style="border-color: rgba(255,255,255,0.15); margin: 2em 0;">
+								
+								<ul class="actions">
+									<li><a href="galleries.html" class="button">Back to Galleries</a></li>
+								</ul>
+							</div>
+
+						</div>
+					</div>
+				</header>
+
+			<footer id="footer">
+					<p class="copyright">&copy; MekoVisuals. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+				</footer>
+		</div>
+
+	<div id="lightbox">
+	  <span id="lightbox-close">&times;</span>
+	  <img id="lightbox-img" src="">
+	  <span class="lightbox-nav" id="lightbox-prev">&#10094;</span>
+	  <span class="lightbox-nav" id="lightbox-next">&#10095;</span>
+	</div>
+
+	<div id="bg"></div>
+
+	<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+	<script>
+		/* ----------------------------------------------------
+		  SHA-256 JavaScript
+		---------------------------------------------------- */
+		function sha256(ascii) {
+		  function rightRotate(value, amount) {
+			return (value>>>amount) | (value<<(32 - amount));
+		  }
+		  var mathPow = Math.pow;
+		  var maxWord = mathPow(2, 32);
+		  var result = '';
+		  var words = [];
+		  var asciiBitLength = ascii.length*8;
+		  var hash = sha256.h = sha256.h || [];
+		  var k = sha256.k = sha256.k || [];
+		  var primeCounter = k.length;
+		  var isComposite = {};
+		  for (var candidate = 2; primeCounter < 64; candidate++) {
+			if (!isComposite[candidate]) {
+			  for (i = 0; i < 313; i += candidate) {
+				isComposite[i] = candidate;
+			  }
+			  hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+			  k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+			}
+		  }
+		  ascii += '\x80';
+		  while (ascii.length%64 - 56) ascii += '\x00';
+		  for (i = 0; i < ascii.length; i++) {
+			j = ascii.charCodeAt(i);
+			if (j>>8) return;
+			words[i>>2] |= j << ((3 - i)%4)*8;
+		  }
+		  words[words.length] = (asciiBitLength/maxWord)|0;
+		  words[words.length] = asciiBitLength;
+		  for (j = 0; j < words.length;) {
+			var w = words.slice(j, j += 16);
+			var oldHash = hash;
+			hash = hash.slice(0, 8);
+			for (i = 0; i < 64; i++) {
+			  var w15 = w[i - 15], w2 = w[i - 2];
+			  var a = hash[0], e = hash[4];
+			  var temp1 = hash[7]
+				+ (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+				+ ((e&hash[5])^((~e)&hash[6]))
+				+ k[i]
+				+ (w[i] = (i < 16) ? w[i] :
+				  (w[i - 16]
+				  + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
+				  + w[i - 7]
+				  + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10)))|0
+				  );
+			  var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+				+ ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+			  hash = [(temp1+temp2)|0].concat(hash);
+			  hash[4] = (hash[4] + temp1)|0;
+			}
+			for (i = 0; i < 8; i++) {
+			  hash[i] = (hash[i] + oldHash[i])|0;
+			}
+		  }
+		  for (i = 0; i < 8; i++) {
+			for (j = 3; j + 1; j--) {
+			  var b = (hash[i]>>(j*8))&255;
+			  result += ((b < 16) ? 0 : '') + b.toString(16);
+			}
+		  }
+		  return result;
+		}
+
+		/* -----------------------------------------
+		  SET YOUR PASSWORD HASH HERE
+		----------------------------------------- */
+		const CORRECT_HASH = "260764772b9abdbf6ad71e2354b79f72f0020ee825398eec91157afa16f46de3";
+
+		/* -------------------- IMAGE LIST -------------------- */
+		const IMAGES = [
+		  "imagesPrivate/IMG1.png",
+		  "imagesPrivate/IMG2.png",
+		  "imagesPrivate/IMG3.png",
+		  "imagesPrivate/IMG4.png"
+		];
+		/* --------------------------------------------------- */
+
+		// --- Global variables
+		const pwInput = document.getElementById('pw');
+		const errEl = document.getElementById('err');
+		const downloadAllBtn = document.getElementById('downloadAllBtn');
+		let currentImageIndex = 0;
+
+		function unlock(){
+		  const pw = pwInput.value.trim();
+		  const hash = sha256(pw);
+
+		  if(hash === CORRECT_HASH){
+			sessionStorage.setItem("galleryUnlocked","1");
+			showGallery();
+		  } else {
+			errEl.textContent = "Incorrect password";
+			errEl.style.display = "block";
+			pwInput.select();
+		  }
+		}
+
+		function showGallery(){
+		  document.getElementById("lockBox").style.display = "none";
+		  document.getElementById("galleryBox").style.display = "block";
+
+		  const gal = document.getElementById("gallery");
+		  gal.innerHTML = "";
+
+		  IMAGES.forEach((url, index)=>{
+			const item = document.createElement("div");
+			item.className = "gallery-item";
+
+			const img = document.createElement("img");
+			img.src = url;
+			img.onclick = () => openLightbox(index);
+			
+			const filename = url.split('/').pop();
+
+			const dlBtn = document.createElement("a");
+			dlBtn.href = url;
+			dlBtn.setAttribute("download", filename);
+			dlBtn.className = "download-btn";
+			dlBtn.innerHTML = "&#10515;"; 
+			dlBtn.onclick = (e) => e.stopPropagation();
+
+			item.appendChild(img);
+			item.appendChild(dlBtn);
+			gal.appendChild(item);
+		  });
+		}
+
+		// --- Lightbox Functions ---
+		const lightbox = document.getElementById('lightbox');
+		const lightboxImg = document.getElementById('lightbox-img');
+
+		function openLightbox(index) {
+		  currentImageIndex = index;
+		  updateLightboxImage();
+		  lightbox.style.display = "flex";
+		}
+		function closeLightbox() {
+		  lightbox.style.display = "none";
+		}
+		function updateLightboxImage() {
+		  lightboxImg.src = IMAGES[currentImageIndex];
+		}
+		function nextImage() {
+		  currentImageIndex = (currentImageIndex + 1) % IMAGES.length;
+		  updateLightboxImage();
+		}
+		function prevImage() {
+		  currentImageIndex = (currentImageIndex - 1 + IMAGES.length) % IMAGES.length;
+		  updateLightboxImage();
+		}
+
+		// --- "Download All" Function ---
+		function downloadAll() {
+		  downloadAllBtn.disabled = true;
+		  downloadAllBtn.textContent = "Zipping...";
+
+		  const zip = new JSZip();
+		  let promises = IMAGES.map((url) => {
+			const filename = url.split('/').pop();
+			return fetch(url)
+			  .then(response => {
+				if (!response.ok) {
+				  throw new Error(`Failed to fetch ${url}`);
+				}
+				return response.blob();
+			  })
+			  .then(blob => {
+				zip.file(filename, blob);
+			  });
+		  });
+
+		  Promise.all(promises)
+			.then(() => {
+			  zip.generateAsync({ type: "blob" })
+				.then(content => {
+				  saveAs(content, "gallery.zip");
+				  downloadAllBtn.disabled = false;
+				  downloadAllBtn.textContent = "Download All (.zip)";
+				});
+			})
+			.catch(error => {
+			  console.error("Error creating zip file:", error);
+			  alert("Failed to download all images. See console for details.");
+			  downloadAllBtn.disabled = false;
+			  downloadAllBtn.textContent = "Download All (.zip)";
+			});
+		}
+
+		// --- Event Listeners ---
+		pwInput.addEventListener("input", ()=> errEl.style.display = "none");
+		pwInput.addEventListener("keydown", e=>{ if(e.key==="Enter") unlock(); });
+
+		document.getElementById("unlockBtn").onclick = unlock;
+		downloadAllBtn.onclick = downloadAll;
+
+		document.getElementById('lightbox-close').onclick = closeLightbox;
+		document.getElementById('lightbox-next').onclick = nextImage;
+		document.getElementById('lightbox-prev').onclick = prevImage;
+
+		if(sessionStorage.getItem("galleryUnlocked")==="1"){
+		  showGallery();
+		}
+	</script>
+
+</body>
+</html>
