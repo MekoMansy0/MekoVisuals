@@ -6,44 +6,124 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		
+		<style>
+			/* Make the body scrollable */
+			body {
+				height: auto;
+				min-height: 100vh;
+			}
+			/* Override the template's main wrapper to allow scrolling */
+			#wrapper {
+				height: auto;
+				min-height: 100vh;
+				padding-top: 5em; /* Add space at the top */
+				padding-bottom: 5em; /* Add space at the bottom */
+			}
+			/* This replaces the full-screen modal behavior */
+			#header {
+				display: block; /* No longer centered */
+				position: relative;
+				height: auto;
+				background-color: transparent;
+			}
+			/* Style for the new gallery list */
+			.gallery-list {
+				list-style: none;
+				padding: 0;
+				width: 100%;
+			}
+			.gallery-list li {
+				margin-bottom: 1em;
+			}
+			/* Style the links to look like clean, flat buttons */
+			.gallery-list a {
+				display: block;
+				padding: 1.5em 1.25em;
+				text-decoration: none;
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.15);
+				border-radius: 4px; /* Matches template's input fields */
+				color: #fff;
+				font-weight: 600;
+				transition: background 0.2s ease-in-out, border-color 0.2s ease-in-out;
+			}
+			.gallery-list a:hover {
+				background: rgba(255, 255, 255, 0.1);
+				border-color: rgba(255, 255, 255, 0.3);
+			}
+			/* Client name */
+			.gallery-list a .client-name {
+				font-size: 1.1em;
+			}
+			/* Shoot description (e.g., "Wedding" or "Portraits") */
+			.gallery-list a .shoot-type {
+				display: block;
+				font-size: 0.9em;
+				color: rgba(255, 255, 255, 0.5);
+				font-weight: 400;
+				margin-top: 0.25em;
+			}
+		</style>
 	</head>
 	<body class="is-preload">
 
 		<div id="wrapper">
 
-				<header id="header">
-						<div class="content">
-							<div class="inner">
-								<h1>Galleries</h1>
-								<p>Select a gallery to view.</p>
-								
-								<ul class="actions stacked">
-									<li><a href="private.html" class="button primary">Client Gallery</a></li>
-									<li><a href="#" class="button disabled">Portraits (Coming Soon)</a></li>
-									<li><a href="#" class="button disabled">Landscapes (Coming Soon)</a></li>
-								</ul>
-								
-								<hr style="border-color: rgba(255,255,255,0.15); margin: 2em 0;">
-								
-								<ul class="actions">
-									<li><a href="index.html" class="button">Back to Home</a></li>
-								</ul>
-							</div>
-						</div>
-					</header>
+			<header id="header">
+				<div class="content">
+					<div class="inner">
+						<h1>Galleries</h1>
+						<p>A complete archive of client shoots and projects.</p>
+						
+						<ul class="gallery-list">
 
-				<footer id="footer">
-						<p class="copyright">&copy; MekoVisuals. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-					</footer>
-			</div>
+							<li>
+								<a href="private.html">
+									<span class="client-name">The "Client Gallery" Placeholder</span>
+									<span class="shoot-type">This is your main private gallery link.</span>
+								</a>
+							</li>
+
+							<li>
+								<a href="#"> <span class="client-name">Johnson Family</span>
+									<span class="shoot-type">Fall Portraits 2024</span>
+								</a>
+							</li>
+							
+							<li>
+								<a href="#"> <span class="client-name">Smith & Co.</span>
+									<span class="shoot-type">Corporate Headshots 2024</span>
+								</a>
+							</li>
+							
+							<li>
+								<a href="#"> <span class="client-name">A+R Wedding</span>
+									<span class="shoot-type">August 2024</span>
+								</a>
+							</li>
+
+						</ul>
+
+						<hr style="border-color: rgba(255,255,255,0.15); margin: 2em 0;">
+						
+						<ul class="actions">
+							<li><a href="index.html" class="button">Back to Home</a></li>
+						</ul>
+					</div>
+				</div>
+			</header>
+
+			<footer id="footer">
+				<p class="copyright">&copy; MekoVisuals. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+			</footer>
+		</div>
 
 		<div id="bg"></div>
 
 		<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script> 
 			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-
-	</body>
+			<script src="assets/js/main.js"></script> </body>
 </html>

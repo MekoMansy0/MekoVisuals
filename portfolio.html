@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Portfolio - MekoVisuals</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+		<style>
+			/* =================================
+			  1. SCROLLING FIX
+			  =================================
+			*/
+			html, body {
+				height: auto !important;
+				min-height: 100vh;
+				overflow: auto !important;
+			}
+			#wrapper {
+				display: block !important; 
+				height: auto;
+				min-height: 100vh;
+				padding: 4em 2em 2em 2em;
+			}
+			#header {
+				position: relative;
+				height: auto;
+				display: block;
+				background: transparent;
+			}
+			
+			/* =================================
+			  2. PHOTO WALL STYLES
+			  =================================
+			*/
+			.photo-wall {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: 1.5em;
+				margin-top: 2.5em;
+			}
+			
+			.photo-wall img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: 4px;
+				cursor: pointer; /* Changes mouse to a pointer */
+				transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+			}
+			
+			.photo-wall img:hover {
+				transform: scale(1.03);
+				opacity: 0.9;
+			}
+			
+			/* =================================
+			  3. LIGHTBOX STYLES
+			  =================================
+			*/
+			#lightbox {
+				display: none;
+				position: fixed;
+				z-index: 1000;
+				left: 0; top: 0;
+				width: 100%; height: 100%;
+				background-color: rgba(0,0,0,0.9);
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+			}
+			#lightbox img { 
+				max-width: 90vw; 
+				max-height: 80vh; 
+				object-fit: contain;
+				
+				/* This CSS disables right-click and save */
+				pointer-events: none;
+				user-select: none;
+				-webkit-user-select: none;
+			}
+			#lightbox-close, .lightbox-nav {
+				position: absolute;
+				cursor: pointer;
+				color: #fff;
+				font-size: 40px;
+				font-weight: bold;
+				user-select: none;
+			}
+			#lightbox-close { top: 20px; right: 35px; }
+			.lightbox-nav { top: 50%; transform: translateY(-50%); padding: 16px; }
+			#lightbox-prev { left: 10px; }
+			#lightbox-next { right: 10px; }
+
+		</style>
+	</head>
+	
+	<body>
+
+		<div id="wrapper">
+
+			<header id="header">
+				<div class="content">
+					<div class="inner">
+						<h1>Portfolio</h1>
+						<p>A selection of my favorite work and personal projects.</p>
+						
+						<div class="photo-wall" id="photo-wall">
+							<img src="portfolio/IMG_0213.JPG" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_0215.JPG" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_0218.JPG" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_0226.JPG" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_0243.jpg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6899.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6900.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6920.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6930.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6935.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6940.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6974.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6979.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_6981.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7013.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7015.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7018.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7020.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7029.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7050.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7051.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7053.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_7993.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8003.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8005.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8006.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8010.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8012.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8015.jpeg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8034.jpg" alt="Meko Visuals Portfolio Photo" />
+							<img src="portfolio/IMG_8035.jpg" alt="Meko Visuals Portfolio Photo" />
+						</div>
+
+						<ul class="actions" style="margin-top: 3em;">
+							<li><a href="index.html" class="button">Back to Home</a></li>
+						</ul>
+					</div>
+				</div>
+			</header>
+
+			<footer id="footer">
+				<p class="copyright">&copy; MekoVisuals 2025. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+			</footer>
+		</div>
+
+		<div id="lightbox">
+			<span id="lightbox-close">&times;</span>
+			<img id="lightbox-img" src="">
+			<span class="lightbox-nav" id="lightbox-prev">&#10094;</span>
+			<span class="lightbox-nav" id="lightbox-next">&#10095;</span>
+		</div>
+
+		<div id="bg"></div>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		
+		<script>
+			// --- 1. Create a list of all your image paths ---
+			const IMAGES = [
+			  "portfolio/IMG_0213.JPG", "portfolio/IMG_0215.JPG", "portfolio/IMG_0218.JPG",
+			  "portfolio/IMG_0226.JPG", "portfolio/IMG_0243.jpg", "portfolio/IMG_6899.jpeg",
+			  "portfolio/IMG_6900.jpeg", "portfolio/IMG_6920.jpeg", "portfolio/IMG_6930.jpeg",
+			  "portfolio/IMG_6935.jpeg", "portfolio/IMG_6940.jpeg", "portfolio/IMG_6974.jpeg",
+			  "portfolio/IMG_6979.jpeg", "portfolio/IMG_6981.jpeg", "portfolio/IMG_7013.jpeg",
+			  "portfolio/IMG_7015.jpeg", "portfolio/IMG_7018.jpeg", "portfolio/IMG_7020.jpeg",
+			  "portfolio/IMG_7029.jpeg", "portfolio/IMG_7050.jpeg", "portfolio/IMG_7051.jpeg",
+			  "portfolio/IMG_7053.jpeg", "portfolio/IMG_7993.jpeg", "portfolio/IMG_8003.jpeg",
+			  "portfolio/IMG_8005.jpeg", "portfolio/IMG_8006.jpeg", "portfolio/IMG_8010.jpeg",
+			  "portfolio/IMG_8012.jpeg", "portfolio/IMG_8015.jpeg", "portfolio/IMG_8034.jpg",
+			  "portfolio/IMG_8035.jpg"
+			];
+
+			// --- 2. Get all the lightbox HTML elements ---
+			const lightbox = document.getElementById('lightbox');
+			const lightboxImg = document.getElementById('lightbox-img');
+			let currentImageIndex = 0;
+
+			// --- 3. Create functions to control the lightbox ---
+			function openLightbox(index) {
+			  currentImageIndex = index;
+			  updateLightboxImage();
+			  lightbox.style.display = "flex";
+			}
+			function closeLightbox() {
+			  lightbox.style.display = "none";
+			}
+			function updateLightboxImage() {
+			  lightboxImg.src = IMAGES[currentImageIndex];
+			}
+			function nextImage() {
+			  currentImageIndex = (currentImageIndex + 1) % IMAGES.length;
+			  updateLightboxImage();
+			}
+			function prevImage() {
+			  currentImageIndex = (currentImageIndex - 1 + IMAGES.length) % IMAGES.length;
+			  updateLightboxImage();
+			}
+
+			// --- 4. Add click listeners to all gallery images ---
+			window.onload = function() {
+				const galleryImages = document.querySelectorAll('#photo-wall img');
+				
+				galleryImages.forEach((img, index) => {
+					img.onclick = () => {
+						openLightbox(index);
+					};
+				});
+			};
+			
+			// --- 5. Add click listeners to lightbox buttons ---
+			document.getElementById('lightbox-close').onclick = closeLightbox;
+			document.getElementById('lightbox-next').onclick = nextImage;
+			document.getElementById('lightbox-prev').onclick = prevImage;
+			
+		</script>
+
+	</body>
+</html>
